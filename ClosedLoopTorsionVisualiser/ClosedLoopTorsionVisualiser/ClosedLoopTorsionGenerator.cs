@@ -13,10 +13,10 @@ namespace ClosedLoopTorsionVisualiser
         /// <summary>
         /// Convert HSV coordinates into <see cref="Color"/>.
         /// </summary>
-        /// <param name="hue"></param>
-        /// <param name="saturation"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="hue">The hue.</param>
+        /// <param name="saturation">The saturation.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The <see cref="Color"/>.</returns>
         public static Color ColorFromHSV(double hue, double saturation, double value)
         {
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
@@ -45,7 +45,7 @@ namespace ClosedLoopTorsionVisualiser
         /// <summary>
         /// The number of twists of the closed loop.
         /// </summary>
-        public int Twists = 0;
+        public double Twists = 0;
 
         /// <summary>
         /// Gets the torsion at the <paramref name="theta"/> along the closed loop.
@@ -54,12 +54,6 @@ namespace ClosedLoopTorsionVisualiser
         /// <returns>The torsion at <paramref name="theta"/>.</returns>
         public double GetTorsion(double theta)
         {
-            // Maintain zero torsion at theta = pi
-            // have pi * twists of torsion at theta = 0
-            // Example: if twists = 1, then torsion = pi/2 at pi/2. Linearly interpolate from 
-            // Example: if twists = 2, then torsion = pi/3 at pi/3
-            // A twist at every pi/(twists+1)
-            // Linear interpolation from 0 to pi.
             return Twists * Math.Abs(Math.PI - theta);
         }
 
@@ -70,8 +64,8 @@ namespace ClosedLoopTorsionVisualiser
         /// <returns>The torsion colour at <paramref name="theta"/>.</returns>
         public Color GetTorsionColour(double theta)
         {
-            var hue = GetTorsion(theta);
-            return ColorFromHSV(hue, 0, 0);
+            var hue = 2 * GetTorsion(theta) * 180 / Math.PI;
+            return ColorFromHSV(hue, 1, 1);
         }
     }
 }
